@@ -83,14 +83,14 @@ for count = 1:1:iterations
     for i = 1:1:n
         if abs(IwLH(i))< 1e-5
             Eve_index_LH = [Eve_index_LH,i];
-            %Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
-            Eve_sample_LH = [Eve_sample_LH, U_noise_AL(i)];
+            Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
+            %Eve_sample_LH = [Eve_sample_LH, U_noise_AL(i)];
             %Eve_sample_LH = [Eve_sample_LH, U_noise_BH(i)];
         end
         if abs(IwHL(i))< 1e-5
             Eve_index_HL = [Eve_index_HL,i];
-            %Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
-            Eve_sample_HL = [Eve_sample_HL, U_noise_AH(i)];
+            Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
+            %Eve_sample_HL = [Eve_sample_HL, U_noise_AH(i)];
             %Eve_sample_HL = [Eve_sample_HL, U_noise_BL(i)];
         end
     end
