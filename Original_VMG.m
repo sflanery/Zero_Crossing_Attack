@@ -3,10 +3,10 @@ clc;clear;close all;
 
 % setting parameters
 k = 1.38e-23; %J/K
-RAH = 16700; %Ohms
-RAL = 100; %Ohms
-RBH = 16700;
-RBL = 278;
+RAH = 46400; %Ohms
+RAL = 278; %Ohms
+RBH = 278;
+RBL = 100;
 fB = 500; %Hz
 
 %freely choose the RMS value of UAL
@@ -19,7 +19,7 @@ TAH = (RAL/RAH) * TAL * (RBL *(RAH + RBH) + RAH * RBH + RAH^2) / (RAL^2 + RBL*(R
 TBH = (RAL/RBH) * TAL * (RBL *(RAH + RBH) - RAH * RBH - RBH^2) / (RAL^2 + RBL*(RAL-RAH)- RAH*RAL);
 TBL =(RAL/RBL) * TAL * (RBL *(RAH - RBH) - RAH * RBH + RBL^2) / (RAL^2 + RAL*(RBH-RAH)- RAH*RBH);
 
-n = 10000; %sample size
+n = 1000; %sample size
 iterations = 1000;
 
 correct_guess = 'HL';
@@ -33,6 +33,9 @@ ms_zc_LH = [];
 ms_UwHL = [];
 ms_IwHL = [];
 ms_zc_HL = [];
+
+%ZC_Alice = fopen('ZC_Alice.txt','w');
+%ZC_regular = fopen('ZC_Regular.txt','w');
 
 for count = 1:1:iterations
     %noise voltages
@@ -80,19 +83,33 @@ for count = 1:1:iterations
     Eve_index_HL = [];
     Eve_sample_HL = [];
 
-    for i = 1:1:n
-        if abs(IwLH(i))< 1e-5
-            Eve_index_LH = [Eve_index_LH,i];
-            Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
+    %for i = 1:1:n
+        %if abs(IwLH(i))< 1e-5
+            %Eve_index_LH = [Eve_index_LH,i];
+            %Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
+            %fprintf(UwLH(i),ZC_regular);
             %Eve_sample_LH = [Eve_sample_LH, U_noise_AL(i)];
+            %fprintf(U_noise_AL(i),ZC_Alice);
             %Eve_sample_LH = [Eve_sample_LH, U_noise_BH(i)];
-        end
-        if abs(IwHL(i))< 1e-5
-            Eve_index_HL = [Eve_index_HL,i];
-            Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
+        %end
+        %if abs(IwHL(i))< 1e-5
+            %Eve_index_HL = [Eve_index_HL,i];
+            %Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
             %Eve_sample_HL = [Eve_sample_HL, U_noise_AH(i)];
             %Eve_sample_HL = [Eve_sample_HL, U_noise_BL(i)];
+        %end
+    %end
+
+    %Bit exchanges for DUALITY
+    for i = 1:1:n
+        if abs(UwLH(i)) < 1e-1  %Check if voltage is near 0
+            Eve_index_LH = [Eve_index_LH,i];
+            Eve_sample_LH = [Eve_sample_LH, IwLH(i)];
         end
+        if abs(UwHL(i)) < 1e-1
+            Eve_index_HL = [Eve_index_HL,i];
+            Eve_sample_HL = [Eve_sample_HL, IwHL(i)];
+        end 
     end
 
     %RMS for HL and LH for each bit exchange
@@ -112,6 +129,10 @@ for count = 1:1:iterations
         correct_guess_count = correct_guess_count + 1;
     end
 end
+
+%fclose(ZC_Alice);
+%fclose(ZC_regular);
+
 PHL = mean(PHL);
 PLH = mean(PLH);
 %Print out
