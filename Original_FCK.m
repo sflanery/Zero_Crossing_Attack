@@ -83,18 +83,30 @@ for count = 1:1:iterations
     Eve_index_HL = [];
     Eve_sample_HL = [];
 
-    for i = 1:1:n
+    %for i = 1:1:n
         %Check if mean square voltage of BH and AL are the same and break (attempt single
         %bit exchange)
    
-        if abs(IwLH(i))<= 1e-5
+        %if abs(IwLH(i))<= 1e-5
+            %Eve_index_LH = [Eve_index_LH,i];
+            %Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
+        %end
+        %if abs(IwHL(i))<= 1e-5
+            %Eve_index_HL = [Eve_index_HL,i];
+            %Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
+        %end
+    %end
+
+    %Bit exchanges for DUALITY
+    for i = 1:1:n
+        if abs(UwLH(i)) < 1e-1  %Check if voltage is near 0
             Eve_index_LH = [Eve_index_LH,i];
-            Eve_sample_LH = [Eve_sample_LH, UwLH(i)];
+            Eve_sample_LH = [Eve_sample_LH, IwLH(i)];
         end
-        if abs(IwHL(i))<= 1e-5
+        if abs(UwHL(i)) < 1e-1
             Eve_index_HL = [Eve_index_HL,i];
-            Eve_sample_HL = [Eve_sample_HL, UwHL(i)];
-        end
+            Eve_sample_HL = [Eve_sample_HL, IwHL(i)];
+        end 
     end
 
     %RMS for HL and LH for each bit exchange
